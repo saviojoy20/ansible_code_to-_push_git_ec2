@@ -8,6 +8,7 @@
       instance_type: t2.micro
       ami_id: ami-0dacb0c129b49f529
       ami_user: ec2-user
+      gitrepo: 'https://github.com/saviojoy20/testfile.git'
 
     tasks:
       - name: "Aws InfraStructure Creation - KeyPair Creation"
@@ -85,16 +86,19 @@
     tasks:
       - name: "Installing Webserver"
         yum:
-          name: httpd
+          name:
+           - httpd
+           - git
           state: present
 
       - name : "pulling file from source"
         git:
-          repo: ''
+          repo: gitrepo
           dest: /var/www/html/
         register: gitreplay
       - name : "printing git replay information" 
-        debug: gitreplay 
+        debug:
+          var: gitreplay 
       - name: "restarting"
         service:
           name: httpd
